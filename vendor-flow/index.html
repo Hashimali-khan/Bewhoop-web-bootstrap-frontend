@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BeWhoop</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    html, body {
+      height: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      overflow: hidden;
+    }
+
+    .full-height {
+      height: 100vh;
+      width: 100vw;
+    }
+
+    .left-panel {
+      background-color: #fff;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .right-panel {
+      background-color:rgb(255, 255, 255);
+      padding: 0;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .right-panel img {
+      width: 100%;
+      height: 100%;
+      /* Ensure full image is visible */
+    }
+
+    .btn-custom-red,
+    .btn-peach,
+    .btn-offwhite {
+      width: 350px;
+      height: 70px;
+      border-radius: 10px;
+      border: none;
+      font-weight: 600;
+    }
+
+    .btn-custom-red {
+      background: linear-gradient(to right, #a32920, #8e1e17);
+      color: white;
+    }
+
+    .btn-peach {
+      background-color: #fddcc9;
+      color: #000;
+    }
+
+    .btn-offwhite {
+      background-color: #f6f5ec;
+      color: #000;
+    }
+
+    .logo-top {
+      position: absolute;
+      top: 30px;
+      left: 40px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-top img {
+      height: 30px;
+    }
+
+    .logo-top span {
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+
+    @media (max-width: 768px) {
+      .btn-custom-red,
+      .btn-peach,
+      .btn-offwhite {
+        width: 90%;
+      }
+
+      .right-panel img {
+        object-fit: contain;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container-fluid g-0 full-height">
+    <div class="row h-100 w-100 g-0">
+      <div class="col-md-7 left-panel"> <div class="logo-top">
+          <img src="./logo.png" alt="BeWhoop Logo" />
+          
+        </div>
+
+        <button class="btn btn-custom-red mb-3"><strong>Create an event</strong></button>
+        <a><button class="btn btn-offwhite"><strong>Sign In</strong></button></a>
+        
+      </div>
+
+      <div class="col-md-5 right-panel"> <img src="LSimage2.png" alt="Background Image" />
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

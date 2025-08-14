@@ -1,0 +1,93 @@
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      overflow: hidden;
+    }
+
+    .full-height {
+      height: 100vh;
+      width: 100vw;
+    }
+
+    .left-panel {
+      background-color: #fff;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .right-panel {
+      background-color:rgb(255, 255, 255);
+      padding: 0;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .right-panel img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain; /* Ensure full image is visible */
+    }
+
+    .btn-custom-red,
+    .btn-peach,
+    .btn-offwhite {
+      width: 350px;
+      height: 70px;
+      border-radius: 10px;
+      border: none;
+      font-weight: 600;
+    }
+
+    .btn-custom-red {
+      background: linear-gradient(to right, #a32920, #8e1e17);
+      color: white;
+    }
+
+    .btn-peach {
+      background-color: #fddcc9;
+      color: #000;
+    }
+
+    .btn-offwhite {
+      background-color: #f6f5ec;
+      color: #000;
+    }
+
+    .logo-top {
+      position: absolute;
+      top: 30px;
+      left: 40px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-top img {
+      height: 30px;
+    }
+
+    .logo-top span {
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+
+    @media (max-width: 768px) {
+      .btn-custom-red,
+      .btn-peach,
+      .btn-offwhite {
+        width: 90%;
+      }
+
+      .right-panel img {
+        object-fit: contain;
+      }
+    }

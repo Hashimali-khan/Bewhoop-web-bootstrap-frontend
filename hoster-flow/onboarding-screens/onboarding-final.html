@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1481, initial-scale=1.0">
+  <title>Onboarding Final - Bewhoop</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style-final.css" />
+  <!-- Google Fonts (Poppins) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="d-flex onboarding-final-wrapper" style="height:100vh; width:1481px; min-width:100vw;">
+  <!-- Left Panel -->
+  <div class="left-panel position-relative" style="height:100vh;">
+    <img src="assetsVendorPage/LeftVendor.png" class="left-panel-bg" alt="Left Panel Background" />
+    <div class="left-panel-footer">
+      <h2>MarketPlace</h2>
+      <p>Reference site about Lorem Ipsum, giving information on its origins, as well</p>
+    </div>
+  </div>
+  <!-- Right Panel -->
+  <div class="right-panel position-relative d-flex flex-column justify-content-between" style="height:100vh;">
+    <div class="right-panel-content">
+      <h1 class="mb-2 fw-bold">Let’s set things up for you.</h1>
+      <p class="mb-4 text-muted">Share your vision, and we'll help make it real.</p>
+      <form>
+        <div class="mb-4">
+          <label class="form-label fw-semibold">Your events frequency</label>
+          <input type="text" class="form-control form-control-onboard" placeholder="Enter here">
+        </div>
+        <div class="mb-4">
+          <label class="form-label fw-semibold">Average Size of Event</label>
+          <select class="form-select form-control-onboard">
+            <option selected>100</option>
+            <option>50</option>
+            <option>200</option>
+            <option>500</option>
+          </select>
+        </div>
+        <div class="mb-4">
+          <label class="form-label fw-semibold">Type of Event</label>
+          <div class="tag-input-container" id="tag-input-container">
+            <div id="tag-list" class="d-flex flex-wrap gap-2"></div>
+            <input type="text" id="tag-input" class="tag-input-box" placeholder="Type and press [,] to add events" autocomplete="off" style="border:none;outline:none;background:transparent;min-width:120px;flex:1 0 120px;max-width:100%;font-size:15px;">
+          </div>
+          <div class="suggested-tags mt-2" id="suggested-tags">
+            <span class="suggestion-tag">Lifestyle <span class="suggestion-plus">+</span></span>
+            <span class="suggestion-tag">Cultural <span class="suggestion-plus">+</span></span>
+            <span class="suggestion-tag">Comedy <span class="suggestion-plus">+</span></span>
+          </div>
+        </div>
+      </form>
+    </div>
+    <button class="btn btn-next-onboard" id="onboard-next-btn">Next</button>
+  </div>
+</div>
+<script src="onboarding-tags.js"></script>
+<script>
+document.getElementById('onboard-next-btn').addEventListener('click', function(e) {
+  e.preventDefault();
+  window.location.href = '../pages/dashboard.html';
+});
+</script>
+</body>
+</html> 

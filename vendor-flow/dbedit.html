@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bewhoop Service Profile</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Essential styles for fixed sidebar & scrollable content */
+        html, body {
+            height: 100%; /* Make html and body fill the viewport height */
+            margin: 0;
+            overflow: hidden; /* Prevent the main window from scrolling */
+            background-color: #fffefc; /* Changed body background to match new form */
+            font-size: 0.95em; /* Slightly reduce base font size */
+            font-family: 'Inter', sans-serif; /* New font family */
+        }
+
+        .sidebar {
+            position: fixed; /* Make the sidebar fixed */
+            top: 0;
+            left: 0;
+            height: 100vh; /* Make it span the full viewport height */
+            width: 200px; /* Reduced sidebar width */
+            background-color: #fff;
+            padding-top: 15px; /* Reduced padding */
+            border-right: 1px solid #eee;
+            overflow-y: auto; /* Allow the sidebar content to scroll if it overflows */
+            z-index: 1000; /* Ensure it stays on top of other content */
+        }
+
+        .main-scrollable-content {
+            margin-left: 200px; /* Adjusted margin to match new sidebar width */
+            height: 100vh; /* Make it span the full viewport height */
+            overflow-y: auto; /* THIS IS THE KEY: Makes only this section scrollable */
+            padding: 10px 20px 20px 20px; /* Reduced padding */
+            display: flex; /* Use flexbox for main content */
+            flex-direction: column; /* Arrange items in a column */
+        }
+
+        /* New container to control the width of the main content */
+        .content-wrapper {
+            width: 100%; /* Ensure it takes full width */
+            flex-grow: 1; /* Allow content to grow and push button to bottom */
+            padding-right: 1.5rem; /* Add padding to the right for scrollbar space */
+        }
+
+        /* Sidebar Styling */
+        .sidebar .navbar-brand {
+            color: #333;
+            font-weight: bold;
+            font-size: 0.9em; /* Reduced font size */
+        }
+        .sidebar .nav-item > .nav-link {
+            color: #333; /* Default color for other menu items */
+            font-weight: normal;
+            padding: 8px 15px; /* Reduced padding */
+            font-size: 0.9em; /* Reduced font size */
+        }
+        .sidebar .nav-item > .nav-link.active-main {
+            color: #8B0000; /* Dark Red/Maroon for "My Profile" text */
+            font-weight: bold;
+        }
+        .sidebar .nav-item > .nav-link.active-main .bi-person {
+            color: #8B0000; /* Dark Red/Maroon for "My Profile" icon */
+        }
+        .sidebar .nav-item > .nav-link svg,
+        .sidebar .nav-item > .nav-link i { /* Also target Font Awesome icons */
+            color: #333; /* Default color for all icons */
+            width: 14px; /* Set a consistent width for icons */
+            height: 14px; /* Set a consistent height for icons */
+        }
+        .sidebar .nav-item > .nav-link.active-main svg,
+        .sidebar .nav-item > .nav-link.active-main i {
+            color: #8B0000; /* Dark Red/Maroon for active icon */
+        }
+        .sidebar .sub-menu .nav-item .nav-link {
+            padding: 4px 30px; /* Reduced padding */
+            font-size: 0.8em; /* Reduced font size */
+            color: black;
+            font-weight: normal;
+        }
+        .sidebar .sub-menu .nav-link:hover {
+            background-color: #f0f0f0;
+        }
+        .sidebar .sub-menu .nav-link.active-sub {
+            background-color: transparent;
+            position: relative;
+        }
+        .sidebar .sub-menu .nav-link.active-sub::before {
+            content: '';
+            position: absolute;
+            left: 15px; /* Position the dot */
+            top: 50%;
+            transform: translateY(-50%);
+            width: 6px; /* Size of the dot */
+            height: 6px; /* Size of the dot */
+            background-color: #fd7e14; /* Orange color for the dot */
+            margin-right: 8px;
+            border-radius: 50%;
+            z-index: -1; /* Place it behind the text */
+        }
+        .sidebar hr {
+            border-top: 1px solid #eee; /* Light grey line */
+            margin: 25px 0; /* Increased space above and below the line */
+        }
+
+        /* Top Navigation Bar Styling */
+        .navbar-top {
+            padding-top: 5px !important; /* Reduced top padding */
+            padding-bottom: 5px !important; /* Reduced bottom padding */
+            margin-bottom: 10px !important; /* Reduced bottom margin */
+            background-color: #ffffff !important; /* Changed background to white */
+            border-radius: 0 !important; /* Removed border-radius */
+            box-shadow: none !important; /* Removed box-shadow */
+        }
+        .navbar-top .notification-icon-container {
+            position: relative;
+            display: inline-block;
+            margin-right: 1rem; /* Reduced margin */
+        }
+        .navbar-top .notification-icon-container .fa-bell {
+            font-size: 1.1em; /* Reduced size */
+            color: #6c757d; /* Muted color */
+        }
+        .navbar-top .notification-icon-container .badge {
+            position: absolute;
+            top: -1px; /* Adjusted to be smaller */
+            right: -1px; /* Adjusted to be smaller */
+            padding: .15em .3em; /* Reduced padding */
+            border-radius: 50%;
+            font-size: .55em; /* Reduced font size */
+            background-color: #dc3545; /* Red color for badge */
+            color: white;
+            line-height: 1;
+        }
+        .navbar-top .input-group {
+            width: 380px; /* Reduced width for the search bar */
+        }
+        .navbar-top .input-group .form-control,
+        .navbar-top .input-group-text {
+            border-radius: 25px; /* Made the search bar round */
+            background-color: #f0f0f0; /* Grayish background */
+            border-color: #e0e0e0; /* Lighter border for consistency */
+        }
+        .navbar-top .input-group .form-control {
+            border-top-left-radius: 0 !important; /* Adjust specific corners for input */
+            border-bottom-left-radius: 0 !important;
+        }
+        .navbar-top .input-group-text {
+            border-top-right-radius: 0 !important; /* Adjust specific corners for icon */
+            border-bottom-right-radius: 0 !important;
+        }
+        .navbar-top .user-avatar {
+            width: 28px; /* Reduced size */
+            height: 28px; /* Reduced size */
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        .navbar-top .dropdown-toggle {
+            font-size: 0.9em; /* Reduced font size */
+        }
+        .navbar-top .container-fluid,
+        .navbar-top .d-flex {
+            align-items: center; /* Vertically align items in the center */
+        }
+        .navbar-top .flag-icon {
+            width: 26px; /* Increased width */
+            height: 26px; /* Increased height */
+            object-fit: contain; /* Ensure the flag scales properly */
+        }
+
+        /* Form Section Specific Styles */
+        .form-section-content { /* Wrapper for the new content */
+            padding: 20px; /* Consistent padding */
+        }
+
+        h4 {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #212529; /* Dark gray for text */
+        }
+
+        .form-control {
+            height: 45px;
+            border-radius: 8px;
+            background-color: #f4f4f8;
+            border: 1px solid #e0e0e0; /* Added border for consistency */
+        }
+
+        .tag-box {
+            background-color: #f4f4f8;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tag {
+            background-color: orangered;
+            color: white;
+            border-radius: 20px;
+            padding: 5px 15px;
+            font-size: 0.8rem; /* Adjusted font size for readability */
+        }
+
+        .badge.rounded-pill.text-bg-light {
+            background-color: #e0e0e0 !important; /* Light gray for suggestions */
+            color: #555 !important; /* Darker text for readability */
+            padding: 8px 15px; /* Adjusted padding */
+            font-size: 0.8rem; /* Adjusted font size */
+        }
+
+        .price-inputs {
+            display: flex;
+            gap: 20px;
+        }
+
+        /* Portfolio Upload Specific Styles */
+        .dashed-border {
+            border: 2px dashed #d1d5db; /* Tailwind gray-300 */
+            border-radius: 0.5rem;
+        }
+        /* Custom style for the Next button */
+        .btn-next-custom {
+            background-color: #BE0000; /* Darker red from the image */
+            border-color: #BE0000; /* Match border color */
+            color: white;
+            padding-left: 3rem; /* Reduced padding for wider button */
+            padding-right: 3rem; /* Reduced padding for wider button */
+            border-radius: 9999px; /* rounded-pill equivalent */
+            font-weight: 700; /* fw-bold equivalent */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg equivalent */
+            transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+        .btn-next-custom:hover {
+            background-color: #A93226; /* Slightly darker on hover */
+            border-color: #A93226;
+        }
+
+        /* Custom style for the Upload files button */
+        .btn-upload-custom {
+            background-color: #E63904; /* Orange color from the image */
+            border-color: #E63904; /* Match border color */
+            color: white;
+            padding: 0.3rem 0.8rem; /* Further adjusted padding for size */
+            border-radius: 9999px; /* Fully rounded corners */
+            font-weight: 500; /* Medium font weight */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            font-size: 0.875rem; /* Smaller font size */
+        }
+        .btn-upload-custom:hover {
+            background-color: #E66F00; /* Slightly darker orange on hover */
+            border-color: #E66F00;
+        }
+
+        /* Custom style for Upload Front/Back buttons */
+        .btn-cnic-upload {
+            background-color: #FFE7DE; /* Light orange background from the image */
+            border: 1px solid #FFCC80; /* Light orange border */
+            color: #E65100; /* Dark orange text color */
+            padding: 0.2rem 0.8rem; /* Further adjusted padding for size */
+            border-radius: 9999px; /* Fully rounded corners */
+            font-weight: 600; /* Semi-bold font weight */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+            transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            width: 100%; /* Make button fill available width */
+            text-align: center; /* Center text */
+            font-size: 0.875rem; /* Smaller font size */
+        }
+        .btn-cnic-upload:hover {
+            background-color: #FFE0B2; /* Slightly darker light orange on hover */
+            border-color: #FFB74D;
+        }
+        
+        /* Headings from new content */
+        .fs-5 {
+            font-size: 1.25rem !important; /* Bootstrap's fs-5 */
+        }
+        .fw-semibold {
+            font-weight: 600 !important; /* Bootstrap's fw-semibold */
+        }
+        .text-gray-800 {
+            color: #212529 !important; /* Dark gray */
+        }
+
+        /* Specific styles for the "Edit Profile" section */
+        .edit-profile-section {
+            background-color: #fff; /* Kept white */
+            padding: 20px; /* Reduced padding */
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin-bottom: 20px; /* Reduced margin */
+            text-align: left; /* Ensure content inside is left-aligned */
+            margin-top: 0; /* Removed top margin as it's now at the very top */
+        }
+
+        .edit-profile-section .profile-image-upload {
+            position: relative;
+            width: 120px; /* Reduced size */
+            height: 120px; /* Reduced size */
+            border-radius: 50%;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 0 15px 0; /* Aligned to left */
+            overflow: hidden;
+            border: 3px solid #FFDAB9; /* Light orange color */
+        }
+
+        .edit-profile-section .profile-image-upload img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .edit-profile-section .edit-icon {
+            position: absolute;
+            bottom: 3px; /* Adjusted position */
+            right: 3px; /* Adjusted position */
+            background-color: #FFA500; /* Orange color */
+            color: white;
+            border-radius: 50%;
+            width: 30px; /* Reduced size */
+            height: 30px; /* Reduced size */
+            font-size: 0.8em; /* Reduced icon size */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .edit-profile-section textarea {
+            min-height: 100px; /* Reduced min-height */
+            resize: vertical;
+            font-size: 0.9em; /* Reduced font size */
+        }
+
+        .main-content-heading {
+            font-size: 1.5rem; /* Equivalent to text-xl or slightly larger */
+            font-weight: bold; /* Equivalent to font-bold */
+            color: #212529; /* Dark gray for text-gray-800 */
+            margin-bottom: 1rem; /* Equivalent to mb-3 */
+            padding-left: 0; /* Removed padding to align with content */
+        }
+
+        .sub-content-heading {
+            font-size: 1.25rem; /* Equivalent to text-lg */
+            font-weight: 600; /* Equivalent to font-semibold */
+            color: #212529; /* Dark gray for text-gray-800 */
+            margin-bottom: 0.5rem; /* Equivalent to mb-2 */
+            margin-top: 20px; /* Added margin to separate from image upload */
+            padding: 0; /* Removed extra padding */
+        }
+
+        .save-button-container {
+            text-align: right;
+            margin-top: auto; /* Pushes the button to the bottom when flex-grow is used on content-wrapper */
+            padding: 15px 20px; /* Add padding to the container */
+            background-color: #ffffff; /* Changed background to white */
+            border-top: 1px solid #eee; /* Optional: A subtle border at the top */
+            position: sticky; /* Make it stick to the bottom */
+            bottom: 0; /* Stick to the bottom */
+            z-index: 999; /* Ensure it's above other content but below sidebar */
+        }
+
+        .save-button {
+            background-color: #BE0000;
+            color: white;
+            padding: 8px 25px; /* Reduced padding */
+            border-radius: 9999px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            width: 250px !important; /* Adjusted width */
+            font-size: 0.9em; /* Reduced font size */
+        }
+
+        .save-button:hover {
+            background-color: #A00000;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: static;
+                width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid #eee;
+                overflow-y: visible;
+            }
+            .main-scrollable-content {
+                margin-left: 0;
+                height: auto;
+                overflow-y: visible;
+                padding: 10px;
+            }
+            .sidebar .navbar-nav {
+                flex-direction: row;
+                justify-content: space-around;
+            }
+            .sidebar .nav-item {
+                flex: 1;
+                text-align: center;
+            }
+            .sidebar .sub-menu {
+                display: none;
+            }
+            .price-inputs {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .save-button-container {
+                position: static;
+                border-top: none;
+            }
+            .btn-next-custom { /* Adjusted for mobile */
+                width: 100% !important;
+                float: none;
+                margin-top: 15px;
+            }
+            .right-section-content {
+                padding: 15px; /* Adjust padding for mobile */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="d-flex align-items-center mb-3 ps-2">
+            <img src="logo.png" alt="Bewhoop Logo" class="me-2" style="height: 25px; margin-top: 10px;">
+        </div>
+
+        <ul class="list-group list-group-flush mt-3">
+            <li class="nav-item mb-1">
+                <a class="nav-link d-flex align-items-center" href="#">
+                    <i class="fas fa-comment-dots me-2"></i>
+                    <span>Messages</span>
+                </a>
+            </li>
+            <li class="nav-item mb-1">
+                <a class="nav-link d-flex align-items-center active-main" href="#">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-person me-2" viewBox="0 0 16 16">
+                        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
+                    </svg>
+                    <span>My Profile</span>
+                </a>
+                <ul class="nav flex-column sub-menu">
+                    <li class="nav-item">
+                        <a class="nav-link d-flex align-items-center" href="db1.html">
+                            View Profile
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active-sub d-flex align-items-center" href="#" style>
+                            Edit Profile
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <hr>
+            <li class="nav-item mt-4 mb-1">
+                <a class="nav-link d-flex align-items-center" href="#">
+                    <i class="fas fa-cog me-2"></i>
+                    <span>Settings</span>
+                </a>
+            </li>
+            <li class="nav-item mb-1">
+                <a class="nav-link d-flex align-items-center" href="#">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-box-arrow-right me-2" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z"/>
+                        <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>
+                    </svg>
+                    <span>Logout</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="main-scrollable-content">
+        <div class="content-wrapper">
+            <!-- Top Navigation Bar -->
+            <nav class="navbar navbar-expand-lg bg-white mb-3 p-2 navbar-top">
+                <div class="container-fluid">
+                    <div class="d-flex align-items-center">
+                        <div class="input-group me-2">
+                            <span class="input-group-text" style="background-color: #f0f0f0; border-color: #e0e0e0;"><i class="fas fa-search text-muted"></i></span>
+                            <input type="text" class="form-control" placeholder="Search" style="background-color: #f0f0f0; border-color: #e0e0e0;">
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <!-- Notification Icon -->
+                        <div class="notification-icon-container">
+                            <i class="fas fa-bell"></i>
+                            <span class="badge">1</span>
+                        </div>
+
+                        <div class="dropdown me-2">
+                            <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdownLang" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="flag.png" alt="English Flag" class="me-1 flag-icon">
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownLang">
+                                <li><a class="dropdown-item" href="#">English (US)</a></li>
+                                <li><a class="dropdown-item" href="#">Spanish</a></li>
+                            </ul>
+                        </div>
+                        <div class="dropdown">
+                            <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdownUser" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="https://placehold.co/28x28/ff7f50/ffffff?text=MR" alt="User Avatar" class="rounded-circle me-1 user-avatar"> Moni Roy <span class="text-muted">(Admin)</span>
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownUser">
+                                <li><a class="dropdown-item" href="#">Profile</a></li>
+                                <li><a class="dropdown-item" href="#">Settings</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#">Logout</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Main Form Content -->
+            <div class="form-section-content">
+                <!-- Edit Profile Section - Moved Here -->
+                <h1 class="main-content-heading">Edit Profile</h1>
+                <div class="edit-profile-section">
+                    <div class="profile-image-upload">
+                        <img src="https://placehold.co/120x120/000000/ffffff?text=Reign" alt="Profile Image" id="profileImage">
+                        <div class="edit-icon">
+                            <i class="fas fa-pencil"></i>
+                        </div>
+                        <input type="file" id="imageUpload" accept="image/*" class="d-none">
+                    </div>
+                    <h2 class="sub-content-heading">Edit Description</h2>
+                    <textarea class="form-control profile-description" rows="4" placeholder="Reference site about Lorem Ipsum, giving information on its origins, as well as a random Lipsum generator."></textarea>
+                </div>
+
+                <!-- Service Type -->
+                <h4 style="padding-top: 100px">What type of Services do you provide?</h4>
+                <div class="tag-box">
+                    <input type="text" class="form-control mb-3" placeholder="Type and press (,) to add events">
+                    <div class="tags">
+                        <div class="tag">Dj Service ✕</div>
+                        <div class="tag">Event planner ✕</div>
+                        <div class="tag">Decoration ✕</div>
+                    </div>
+                </div>
+
+                <div class="tags mb-4" style="gap: 15px;">
+                    <span class="badge rounded-pill text-bg-light">Photography +</span>
+                    <span class="badge rounded-pill text-bg-light">Catering +</span>
+                    <span class="badge rounded-pill text-bg-light">Videography +</span>
+                </div>
+
+                <h4 style="padding-top: 100px">Type your Location</h4>
+                <div class="mb-3">
+                    <select class="form-control" id="city">
+                        <option disabled selected>Select a city</option>
+                        <option>Islamabad</option>
+                        <option>Karachi</option>
+                        <option>Lahore</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <input type="text" class="form-control" placeholder="Enter google map link here.">
+                </div>
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d212645.32758412763!2d73.08610799999998!3d33.61611625!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38dfbfd07891722f%3A0x6059515c3bdb02b6!2sIslamabad!5e0!3m2!1sen!2s!4v1753049048041!5m2!1sen!2s" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+                <h4 style="padding-top: 100px">Price Range</h4>
+                <div class="price-inputs mb-5">
+                    <input type="text" class="form-control" placeholder="Minimum">
+                    <input type="text" class="form-control" placeholder="Maximum">
+                </div>
+
+                <!-- Add Portfolio Section -->
+                <h4 style="padding-top: 100px">Add Portfolio</h4>
+
+                <div class="d-flex flex-column flex-md-row gap-3 mb-3">
+                    <!-- Drag and Drop Area -->
+                    <div class="col-12 col-md-8 d-flex flex-column align-items-center justify-content-center p-3 bg-light rounded dashed-border text-center" style="min-height: 120px;">
+                        <svg class="w-12 h-12 text-secondary mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 2.5rem; height: 2.5rem;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 0115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                        </svg>
+                        <p class="text-secondary mb-1" style="font-size: 0.875rem;">Drag File here</p>
+                        <p class="text-muted mb-2" style="font-size: 0.75rem;">or</p>
+                        <button class="btn btn-upload-custom" id="uploadFilesBtn">
+                            Upload files
+                        </button>
+                        <input type="file" id="portfolioFileUpload" multiple class="d-none">
+                        <p class="text-muted mt-2" style="font-size: 0.65rem;">pdf, jpgs, pngs, videos, mp3</p>
+                    </div>
+
+                    <!-- Four Images Placeholder -->
+                    <div class="col-12 col-md-4 d-flex flex-column gap-2" id="portfolioFilesList">
+                        <!-- Example file items - these would be dynamically added -->
+                        <div class="d-flex align-items-center justify-content-between p-1 bg-light rounded shadow-sm">
+                            <div class="d-flex align-items-center">
+                                <img src="https://placehold.co/30x30/e2e8f0/64748b?text=Img1" alt="Image 1" class="rounded me-2 object-fit-cover" style="width: 30px; height: 30px;">
+                                <div>
+                                    <p class="fw-medium text-gray-800 mb-0" style="font-size: 0.75rem;">Catalogue.jpeg</p>
+                                    <p class="text-muted mb-0" style="font-size: 0.65rem;">20 MB, jpeg</p>
+                                </div>
+                            </div>
+                            <button class="btn btn-link text-secondary p-0 delete-file-btn" data-file-id="1" style="--bs-btn-padding-y: 0; --bs-btn-padding-x: 0;">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 1rem; height: 1rem;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                            </button>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between p-1 bg-light rounded shadow-sm">
+                            <div class="d-flex align-items-center">
+                                <img src="https://placehold.co/30x30/e2e8f0/64748b?text=Img2" alt="Image 2" class="rounded me-2 object-fit-cover" style="width: 30px; height: 30px;">
+                                <div>
+                                    <p class="fw-medium text-gray-800 mb-0" style="font-size: 0.75rem;">Catalogue.jpeg</p>
+                                    <p class="text-muted mb-0" style="font-size: 0.65rem;">20 MB, jpeg</p>
+                                </div>
+                            </div>
+                            <button class="btn btn-link text-secondary p-0 delete-file-btn" data-file-id="2" style="--bs-btn-padding-y: 0; --bs-btn-padding-x: 0;">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 1rem; height: 1rem;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add your CNIC Section -->
+                <h2 class="fs-5 fw-semibold text-gray-800 mb-3">Add your CNIC</h2>
+
+                <div class="d-flex flex-column flex-md-row gap-2 mb-3">
+                    <div class="col-6 col-md-4 d-flex flex-column gap-4">
+                        <button class="btn btn-cnic-upload" id="uploadCnicFrontBtn">
+                            Upload Front
+                        </button>
+                        <input type="file" id="cnicFrontUpload" accept="image/*" class="d-none">
+                        <button class="btn btn-cnic-upload" id="uploadCnicBackBtn">
+                            Upload Back
+                        </button>
+                        <input type="file" id="cnicBackUpload" accept="image/*" class="d-none">
+                    </div>
+
+                    <!-- CNIC Uploaded Files List -->
+                    <div class="col-12 col-md-4 d-flex flex-column gap-2" id="cnicFilesList">
+                        <div class="d-flex align-items-center justify-content-between p-1 bg-light rounded shadow-sm">
+                            <div class="d-flex align-items-center">
+                                <img src="https://placehold.co/30x30/e2e8f0/64748b?text=CNIC_F" alt="CNIC Front" class="rounded me-2 object-fit-cover" style="width: 30px; height: 30px;">
+                                <div>
+                                    <p class="fw-medium text-gray-800 mb-0" style="font-size: 0.75rem;">Frontcnic.jpeg</p>
+                                    <p class="text-muted mb-0" style="font-size: 0.65rem;">20 MB, jpeg</p>
+                                </div>
+                            </div>
+                            <button class="btn btn-link text-secondary p-0 delete-file-btn" data-file-id="cnic-front" style="--bs-btn-padding-y: 0; --bs-btn-padding-x: 0;">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 1rem; height: 1rem;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                            </button>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between p-1 bg-light rounded shadow-sm">
+                            <div class="d-flex align-items-center">
+                                <img src="https://placehold.co/30x30/e2e8f0/64748b?text=CNIC_B" alt="CNIC Back" class="rounded me-2 object-fit-cover" style="width: 30px; height: 30px;">
+                                <div>
+                                    <p class="fw-medium text-gray-800 mb-0" style="font-size: 0.75rem;">Backcnic.jpeg</p>
+                                    <p class="text-muted mb-0" style="font-size: 0.65rem;">20 MB, jpeg</p>
+                                </div>
+                            </div>
+                            <button class="btn btn-link text-secondary p-0 delete-file-btn" data-file-id="cnic-back" style="--bs-btn-padding-y: 0; --bs-btn-padding-x: 0;">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 1rem; height: 1rem;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="save-button-container">
+            <button class="btn btn-next-custom" style="width: 300px;">
+                Save
+            </button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Handle Profile Image Upload
+            const uploadFilesBtn = document.getElementById('uploadFilesBtn');
+            const portfolioFileUpload = document.getElementById('portfolioFileUpload');
+            const portfolioFilesList = document.getElementById('portfolioFilesList');
+
+            uploadFilesBtn.addEventListener('click', () => {
+                portfolioFileUpload.click();
+            });
+
+            portfolioFileUpload.addEventListener('change', (event) => {
+                const files = event.target.files;
+                if (files.length > 0) {
+                    // Clear existing placeholder files if new files are uploaded
+                    portfolioFilesList.innerHTML = '';
+                    Array.from(files).forEach(file => {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            const fileItem = `
+                                <div class="d-flex align-items-center justify-content-between p-1 bg-light rounded shadow-sm">
+                                    <div class="d-flex align-items-center">
+                                        <img src="${e.target.result}" alt="${file.name}" class="rounded me-2 object-fit-cover" style="width: 30px; height: 30px;">
+                                        <div>
+                                            <p class="fw-medium text-gray-800 mb-0" style="font-size: 0.75rem;">${file.name}</p>
+                                            <p class="text-muted mb-0" style="font-size: 0.65rem;">${(file.size / 1024 / 1024).toFixed(2)} MB, ${file.type.split('/')[1]}</p>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-link text-secondary p-0 delete-file-btn" data-file-name="${file.name}" style="--bs-btn-padding-y: 0; --bs-btn-padding-x: 0;">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 1rem; height: 1rem;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                    </button>
+                                </div>
+                            `;
+                            portfolioFilesList.insertAdjacentHTML('beforeend', fileItem);
+                        };
+                        if (file.type.startsWith('image/')) {
+                            reader.readAsDataURL(file);
+                        } else {
+                            // For non-image files, use a generic icon or placeholder
+                            const genericIcon = `https://placehold.co/30x30/e2e8f0/64748b?text=${file.type.split('/')[1].toUpperCase()}`;
+                            const fileItem = `
+                                <div class="d-flex align-items-center justify-content-between p-1 bg-light rounded shadow-sm">
+                                    <div class="d-flex align-items-center">
+                                        <img src="${genericIcon}" alt="${file.name}" class="rounded me-2 object-fit-cover" style="width: 30px; height: 30px;">
+                                        <div>
+                                            <p class="fw-medium text-gray-800 mb-0" style="font-size: 0.75rem;">${file.name}</p>
+                                            <p class="text-muted mb-0" style="font-size: 0.65rem;">${(file.size / 1024 / 1024).toFixed(2)} MB, ${file.type.split('/')[1]}</p>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-link text-secondary p-0 delete-file-btn" data-file-name="${file.name}" style="--bs-btn-padding-y: 0; --bs-btn-padding-x: 0;">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 1rem; height: 1rem;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                    </button>
+                                </div>
+                            `;
+                            portfolioFilesList.insertAdjacentHTML('beforeend', fileItem);
+                        }
+                    });
+                }
+            });
+
+            // Handle CNIC Front Upload
+            const uploadCnicFrontBtn = document.getElementById('uploadCnicFrontBtn');
+            const cnicFrontUpload = document.getElementById('cnicFrontUpload');
+            const cnicFilesList = document.getElementById('cnicFilesList');
+
+            uploadCnicFrontBtn.addEventListener('click', () => {
+                cnicFrontUpload.click();
+            });
+
+            cnicFrontUpload.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        // Find or create the CNIC Front entry
+                        let cnicFrontEntry = cnicFilesList.querySelector('[data-file-id="cnic-front"]');
+                        if (!cnicFrontEntry) {
+                            cnicFilesList.innerHTML = ''; // Clear existing if not found
+                            const cnicFrontItem = `
+                                <div class="d-flex align-items-center justify-content-between p-1 bg-light rounded shadow-sm">
+                                    <div class="d-flex align-items-center">
+                                        <img src="${e.target.result}" alt="CNIC Front" class="rounded me-2 object-fit-cover" style="width: 30px; height: 30px;">
+                                        <div>
+                                            <p class="fw-medium text-gray-800 mb-0" style="font-size: 0.75rem;">${file.name}</p>
+                                            <p class="text-muted mb-0" style="font-size: 0.65rem;">${(file.size / 1024 / 1024).toFixed(2)} MB, ${file.type.split('/')[1]}</p>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-link text-secondary p-0 delete-file-btn" data-file-id="cnic-front" style="--bs-btn-padding-y: 0; --bs-btn-padding-x: 0;">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 1rem; height: 1rem;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                    </button>
+                                </div>
+                            `;
+                            cnicFilesList.insertAdjacentHTML('afterbegin', cnicFrontItem); // Add to top
+                        } else {
+                            // Update existing entry
+                            const imgElement = cnicFrontEntry.querySelector('img');
+                            const nameElement = cnicFrontEntry.querySelector('.fw-medium');
+                            const sizeTypeElement = cnicFrontEntry.querySelector('.text-muted');
+                            if (imgElement) imgElement.src = e.target.result;
+                            if (nameElement) nameElement.textContent = file.name;
+                            if (sizeTypeElement) sizeTypeElement.textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB, ${file.type.split('/')[1]}`;
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Handle CNIC Back Upload
+            const uploadCnicBackBtn = document.getElementById('uploadCnicBackBtn');
+            const cnicBackUpload = document.getElementById('cnicBackUpload');
+
+            uploadCnicBackBtn.addEventListener('click', () => {
+                cnicBackUpload.click();
+            });
+
+            cnicBackUpload.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        // Find or create the CNIC Back entry
+                        let cnicBackEntry = cnicFilesList.querySelector('[data-file-id="cnic-back"]');
+                        if (!cnicBackEntry) {
+                            cnicFilesList.innerHTML = ''; // Clear existing if not found
+                            const cnicBackItem = `
+                                <div class="d-flex align-items-center justify-content-between p-1 bg-light rounded shadow-sm">
+                                    <div class="d-flex align-items-center">
+                                        <img src="${e.target.result}" alt="CNIC Back" class="rounded me-2 object-fit-cover" style="width: 30px; height: 30px;">
+                                        <div>
+                                            <p class="fw-medium text-gray-800 mb-0" style="font-size: 0.75rem;">${file.name}</p>
+                                            <p class="text-muted mb-0" style="font-size: 0.65rem;">${(file.size / 1024 / 1024).toFixed(2)} MB, ${file.type.split('/')[1]}</p>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-link text-secondary p-0 delete-file-btn" data-file-id="cnic-back" style="--bs-btn-padding-y: 0; --bs-btn-padding-x: 0;">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 1rem; height: 1rem;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                    </button>
+                                </div>
+                            `;
+                            cnicFilesList.insertAdjacentHTML('beforeend', cnicBackItem); // Add to bottom
+                        } else {
+                            // Update existing entry
+                            const imgElement = cnicBackEntry.querySelector('img');
+                            const nameElement = cnicBackEntry.querySelector('.fw-medium');
+                            const sizeTypeElement = cnicBackEntry.querySelector('.text-muted');
+                            if (imgElement) imgElement.src = e.target.result;
+                            if (nameElement) nameElement.textContent = file.name;
+                            if (sizeTypeElement) sizeTypeElement.textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB, ${file.type.split('/')[1]}`;
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Handle delete buttons (delegated event listener)
+            document.addEventListener('click', (event) => {
+                if (event.target.closest('.delete-file-btn')) {
+                    event.target.closest('.d-flex.align-items-center.justify-content-between.p-1').remove();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

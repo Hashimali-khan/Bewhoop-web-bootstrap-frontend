@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Upload</title>
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" xintegrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5; /* Light gray background - will be covered */
+            height: 100vh; /* Full viewport height */
+            margin: 0;
+            padding: 0; /* Removed padding to maximize content area */
+            overflow: hidden; /* Prevent overall page scrolling */
+            display: flex;
+            align-items: stretch; /* Stretch items to fill height */
+            justify-content: stretch; /* Stretch items to fill width */
+        }
+        .main-container {
+            height: 100vh; /* Maximize height to cover the whole page */
+            width: 100vw; /* Maximize width to cover the whole page */
+            max-width: none; /* Remove max-width constraint */
+            border-radius: 0; /* Remove border-radius for full page coverage */
+            box-shadow: none; /* Remove box-shadow */
+            overflow: hidden;
+        }
+        .left-section {
+            background-color: #ffffffff; /* Gray-200 equivalent */
+            border-top-left-radius: 0; /* Remove border-radius */
+            border-bottom-left-radius: 0; /* Remove border-radius */
+            overflow: hidden;
+        }
+        .right-section {
+            background-color: #ffffff;
+            border-top-right-radius: 0; /* Remove border-radius */
+            border-bottom-right-radius: 0; /* Remove border-radius */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%; /* Take full height of parent */
+            padding: 1.5rem; /* Reduced overall padding for the right section */
+        }
+        .right-content-scrollable {
+            flex-grow: 1;
+            overflow-y: hidden; /* Prevent scrolling in this area */
+            padding-right: 0; /* No space for scrollbar needed if no scroll */
+        }
+        .dashed-border {
+            border: 2px dashed #d1d5db; /* Tailwind gray-300 */
+            border-radius: 0.5rem;
+        }
+        /* Custom style for the Next button */
+        .btn-next-custom {
+            background-color: #BE0000; /* Darker red from the image */
+            border-color: #BE0000; /* Match border color */
+            color: white;
+            padding-left: 3rem; /* Reduced padding for wider button */
+            padding-right: 3rem; /* Reduced padding for wider button */
+            border-radius: 9999px; /* rounded-pill equivalent */
+            font-weight: 700; /* fw-bold equivalent */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg equivalent */
+            transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+        .btn-next-custom:hover {
+            background-color: #A93226; /* Slightly darker on hover */
+            border-color: #A93226;
+        }
+
+        /* Custom style for the Upload files button */
+        .btn-upload-custom {
+            background-color: #E63904; /* Orange color from the image */
+            border-color: #E63904; /* Match border color */
+            color: white;
+            padding: 0.3rem 0.8rem; /* Further adjusted padding for size */
+            border-radius: 9999px; /* Fully rounded corners */
+            font-weight: 500; /* Medium font weight */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            font-size: 0.875rem; /* Smaller font size */
+        }
+        .btn-upload-custom:hover {
+            background-color: #E66F00; /* Slightly darker orange on hover */
+            border-color: #E66F00;
+        }
+
+        /* Custom style for Upload Front/Back buttons */
+        .btn-cnic-upload {
+            background-color: #FFE7DE; /* Light orange background from the image */
+            border: 1px solid #FFCC80; /* Light orange border */
+            color: #E65100; /* Dark orange text color */
+            padding: 0.2rem 0.8rem; /* Further adjusted padding for size */
+            border-radius: 9999px; /* Fully rounded corners */
+            font-weight: 600; /* Semi-bold font weight */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+            transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            width: 100%; /* Make button fill available width */
+            text-align: center; /* Center text */
+            font-size: 0.875rem; /* Smaller font size */
+        }
+        .btn-cnic-upload:hover {
+            background-color: #FFE0B2; /* Slightly darker light orange on hover */
+            border-color: #FFB74D;
+        }
+        .next-btn-container {
+            text-align: right;
+            margin-top: 1rem; /* Reduced from 3rem */
+        }
+        .next-btn {
+            background-color: #BE0000;
+            color: white;
+            padding: 0.5rem 6.5rem; /* Increased horizontal padding (was 2.5rem) */
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            
+        }
+        .next-btn:hover {
+            background-color: #a30000;
+        }
+
+        /* Responsive adjustments for padding - largely removed for full page coverage */
+        @media (min-width: 768px) { /* md breakpoint */
+            .right-section {
+                padding: 2rem; /* Reduced padding for md breakpoint */
+            }
+        }
+        @media (min-width: 992px) { /* lg breakpoint */
+            .right-section {
+                padding: 1.5rem; /* Reduced padding for lg breakpoint */
+            }
+            .left-section {
+                border-top-right-radius: 0; /* Remove top-right radius on large screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid d-flex flex-column flex-lg-row p-0 main-container bg-white">
+
+        <!-- Left Section (Image Placeholder) -->
+        <div class="col-12 col-lg-4 d-flex align-items-center justify-content-center left-section">
+            <!-- Image tag to fill the entire left section -->
+            <!-- Replace './imgbg.png' with your actual image source -->
+            <img src="./imgbg.png" alt="Portfolio background image" class="img-fluid w-100 h-100 ">
+        </div>
+
+        <!-- Right Section (White Background with Forms) -->
+        <div class="col-12 col-lg-8 right-section">
+            <div class="right-content-scrollable">
+                <!-- Add Portfolio Section -->
+                <h2 class="fs-5 fw-semibold text-gray-800 mb-3">Add Portfolio</h2>
+
+                <div class="d-flex flex-column flex-md-row gap-3 mb-3">
+                    <!-- Drag and Drop Area -->
+                    <div class="col-12 col-md-8 d-flex flex-column align-items-center justify-content-center p-3 bg-light rounded dashed-border text-center" style="min-height: 120px;">
+                        <svg class="w-12 h-12 text-secondary mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 2.5rem; height: 2.5rem;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 0115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                        </svg>
+                        <p class="text-secondary mb-1" style="font-size: 0.875rem;">Drag File here</p>
+                        <p class="text-muted mb-2" style="font-size: 0.75rem;">or</p>
+                        <button class="btn btn-upload-custom">
+                            Upload files
+                        </button>
+                        <p class="text-muted mt-2" style="font-size: 0.65rem;">pdf, jpgs, pngs, videos, mp3</p>
+                    </div>
+
+                    <!-- Four Images Placeholder -->
+                    <div class="col-12 col-md-4 d-flex flex-column gap-2">
+                        <!-- Each image item -->
+                        <div class="d-flex align-items-center justify-content-between p-1 bg-light rounded shadow-sm">
+                            <div class="d-flex align-items-center">
+                                <img src="https://placehold.co/30x30/e2e8f0/64748b?text=Img1" alt="Image 1" class="rounded me-2 object-fit-cover" style="width: 30px; height: 30px;">
+                                <div>
+                                    <p class="fw-medium text-gray-800 mb-0" style="font-size: 0.75rem;">Catalogue.jpeg</p>
+                                    <p class="text-muted mb-0" style="font-size: 0.65rem;">20 MB, jpeg</p>
+                                </div>
+                            </div>
+                            <button class="btn btn-link text-secondary p-0" style="--bs-btn-padding-y: 0; --bs-btn-padding-x: 0;">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 1rem; height: 1rem;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                            </button>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between p-1 bg-light rounded shadow-sm">
+                            <div class="d-flex align-items-center">
+                                <img src="https://placehold.co/30x30/e2e8f0/64748b?text=Img2" alt="Image 2" class="rounded me-2 object-fit-cover" style="width: 30px; height: 30px;">
+                                <div>
+                                    <p class="fw-medium text-gray-800 mb-0" style="font-size: 0.75rem;">Catalogue.jpeg</p>
+                                    <p class="text-muted mb-0" style="font-size: 0.65rem;">20 MB, jpeg</p>
+                                </div>
+                            </div>
+                            <button class="btn btn-link text-secondary p-0" style="--bs-btn-padding-y: 0; --bs-btn-padding-x: 0;">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 1rem; height: 1rem;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                            </button>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between p-1 bg-light rounded shadow-sm">
+                            <div class="d-flex align-items-center">
+                                <img src="https://placehold.co/30x30/e2e8f0/64748b?text=Img3" alt="Image 3" class="rounded me-2 object-fit-cover" style="width: 30px; height: 30px;">
+                                <div>
+                                    <p class="fw-medium text-gray-800 mb-0" style="font-size: 0.75rem;">Catalogue.jpeg</p>
+                                    <p class="text-muted mb-0" style="font-size: 0.65rem;">20 MB, jpeg</p>
+                                </div>
+                            </div>
+                            <button class="btn btn-link text-secondary p-0" style="--bs-btn-padding-y: 0; --bs-btn-padding-x: 0;">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 1rem; height: 1rem;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                            </button>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between p-1 bg-light rounded shadow-sm">
+                            <div class="d-flex align-items-center">
+                                <img src="https://placehold.co/30x30/e2e8f0/64748b?text=Img4" alt="Image 4" class="rounded me-2 object-fit-cover" style="width: 30px; height: 30px;">
+                                <div>
+                                    <p class="fw-medium text-gray-800 mb-0" style="font-size: 0.75rem;">Catalogue.jpeg</p>
+                                    <p class="text-muted mb-0" style="font-size: 0.65rem;">20 MB, jpeg</p>
+                                </div>
+                            </div>
+                            <button class="btn btn-link text-secondary p-0" style="--bs-btn-padding-y: 0; --bs-btn-padding-x: 0;">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 1rem; height: 1rem;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add your CNIC Section -->
+                <h2 class="fs-5 fw-semibold text-gray-800 mb-3">Add your CNIC</h2>
+
+                <div class="d-flex flex-column flex-md-row gap-2 mb-3">
+                    <div class="col-6 col-md-4 d-flex flex-column gap-4">
+                        <button class="btn btn-cnic-upload">
+                            Upload Front
+                        </button>
+                        <button class="btn btn-cnic-upload">
+                            Upload Back
+                        </button>
+                    </div>
+
+                    <!-- CNIC Uploaded Files List -->
+                    <div class="col-12 col-md-4 d-flex flex-column gap-2">
+                        <div class="d-flex align-items-center justify-content-between p-1 bg-light rounded shadow-sm">
+                            <div class="d-flex align-items-center">
+                                <img src="https://placehold.co/30x30/e2e8f0/64748b?text=CNIC_F" alt="CNIC Front" class="rounded me-2 object-fit-cover" style="width: 30px; height: 30px;">
+                                <div>
+                                    <p class="fw-medium text-gray-800 mb-0" style="font-size: 0.75rem;">Frontcnic.jpeg</p>
+                                    <p class="text-muted mb-0" style="font-size: 0.65rem;">20 MB, jpeg</p>
+                                </div>
+                            </div>
+                            <button class="btn btn-link text-secondary p-0" style="--bs-btn-padding-y: 0; --bs-btn-padding-x: 0;">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 1rem; height: 1rem;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                            </button>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between p-1 bg-light rounded shadow-sm">
+                            <div class="d-flex align-items-center">
+                                <img src="https://placehold.co/30x30/e2e8f0/64748b?text=CNIC_B" alt="CNIC Back" class="rounded me-2 object-fit-cover" style="width: 30px; height: 30px;">
+                                <div>
+                                    <p class="fw-medium text-gray-800 mb-0" style="font-size: 0.75rem;">Backcnic.jpeg</p>
+                                    <p class="text-muted mb-0" style="font-size: 0.65rem;">20 MB, jpeg</p>
+                                </div>
+                            </div>
+                            <button class="btn btn-link text-secondary p-0" style="--bs-btn-padding-y: 0; --bs-btn-padding-x: 0;">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 1rem; height: 1rem;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Next Button -->
+            <div class="next-btn-container">
+          <a href="db1.html"><button type="button" class="next-btn" onclick="handleNextClick()">Next</button></a>
+          
+        </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS CDN (optional, for interactive components) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" xintegrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>

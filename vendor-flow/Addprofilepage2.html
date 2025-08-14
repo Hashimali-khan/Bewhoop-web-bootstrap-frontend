@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Service Form</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    /* Global styles for full height and font */
+    html, body {
+      height: 100%;
+      margin: 0;
+      overflow: hidden; /* Prevent page scroll */
+      background-color: #fffefc;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    /* Main container to take full viewport height */
+    .container-fluid {
+      height: 100vh;
+    }
+
+    /* Image section for the left side */
+    .image-section {
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .image-section img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover; /* Ensure image covers the area without distortion */
+    }
+
+    /* Form section for the right side */
+    .form-section {
+      height: 100vh;
+      padding: 40px;
+      overflow-y: auto; /* Allow scrolling if content overflows */
+      background-color: white;
+      display: flex; /* Enable flexbox */
+      flex-direction: column; /* Stack children vertically */
+      justify-content: space-between; /* Distribute space between items, pushing last item to bottom */
+    }
+
+    /* Heading styles */
+    h4 {
+      font-size: 1.4rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+
+    /* Form control general styling */
+    .form-control {
+      height: 45px;
+      border-radius: 8px;
+      background-color: #f4f4f8;
+      border: 1px solid #e0e0e0; /* Add a subtle border */
+      padding: 0.75rem 1rem; /* Adjust padding */
+    }
+
+    /* Tag box container */
+    .tag-box {
+      background-color: #f4f4f8;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+    }
+
+    /* Tags display container */
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    /* Individual tag styling */
+    .tag {
+      background-color: orangered;
+      color: white;
+      border-radius: 20px;
+      padding: 5px 15px;
+      font-size: 0.8rem; /* Adjusted font size for better readability */
+      display: flex;
+      align-items: center;
+      gap: 5px; /* Space between text and 'x' */
+    }
+
+    .tag .close-icon {
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    /* Next button container */
+     .next-btn-container {
+            text-align: right;
+            margin-top: 1rem; /* Reduced from 3rem */
+        }
+        .next-btn {
+            background-color: #BE0000;
+            color: white;
+            padding: 0.5rem 6.5rem; /* Increased horizontal padding (was 2.5rem) */
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            
+        }
+        .next-btn:hover {
+            background-color: #a30000;
+        }
+
+    /* Price input fields layout */
+    .price-inputs {
+      display: flex;
+      gap: 20px;
+    }
+
+    /* Responsive adjustments for smaller screens */
+    @media (max-width: 768px) {
+      .image-section {
+        display: none; /* Hide image on small screens */
+      }
+
+      .form-section {
+        padding: 20px; /* Reduce padding on small screens */
+        justify-content: flex-start; /* Adjust content distribution for smaller screens */
+      }
+
+      .price-inputs {
+        flex-direction: column; /* Stack price inputs vertically */
+      }
+
+      .next-btn {
+        width: 100%; /* Full width button on small screens */
+        float: none;
+        padding: 0.75rem 2rem; /* Adjust padding for full width */
+      }
+
+      .next-btn-container {
+        text-align: center; /* Center button on small screens */
+        margin-top: 2rem; /* Add more margin for separation on small screens */
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container-fluid">
+    <div class="row h-100">
+
+      <!-- Left Image Section -->
+      <div class="col-md-4 image-section p-0">
+        <img src="img.png" alt="Side Image">
+      </div>
+
+      <!-- Right Form Section -->
+      <div class="col-md-8 d-flex flex-column form-section">
+        <!-- Content Wrapper to group all form elements except the button -->
+        <div class="form-content">
+          <!-- Service Type -->
+          <h4>What type of Services do you provide?</h4>
+          <div class="tag-box">
+            <input type="text" class="form-control mb-3" placeholder="Type and press (,) to add events" id="serviceInput">
+            <div class="tags" id="serviceTags">
+              <div class="tag" data-value="Dj Service">Dj Service <span class="close-icon">✕</span></div>
+              <div class="tag" data-value="Event planner">Event planner <span class="close-icon">✕</span></div>
+              <div class="tag" data-value="Decoration">Decoration <span class="close-icon">✕</span></div>
+            </div>
+          </div>
+
+          <div class="tags mb-4" style="gap: 15px;" id="suggestedTags">
+            <span class="badge rounded-pill text-bg-light" data-value="Photography">Photography +</span>
+            <span class="badge rounded-pill text-bg-light" data-value="Catering">Catering +</span>
+            <span class="badge rounded-pill text-bg-light" data-value="Videography">Videography +</span>
+          </div>
+
+          <!-- Location -->
+          <h4>Type your Location</h4>
+          <div class="mb-3">
+            <select class="form-control" id="city">
+              <option disabled selected>Select a city</option>
+              <option>Islamabad</option>
+              <option>Karachi</option>
+              <option>Lahore</option>
+            </select>
+          </div>
+          <div class="mb-4">
+            <input type="text" class="form-control" placeholder="Enter google map link here." id="googleMapLink">
+          </div>
+
+          <!-- Price Range -->
+          <h4>Price Range</h4>
+          <div class="price-inputs mb-5">
+            <input type="number" class="form-control" placeholder="Minimum" id="minPrice">
+            <input type="number" class="form-control" placeholder="Maximum" id="maxPrice">
+          </div>
+        </div>
+
+        <!-- Next Button -->
+        <div class="next-btn-container">
+          <a href="Addprofilepage3.html"><button type="button" class="next-btn" onclick="handleNextClick()">Next</button></a>
+          
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // JavaScript for dynamic tag management and form data handling
+    document.addEventListener('DOMContentLoaded', () => {
+      const serviceInput = document.getElementById('serviceInput');
+      const serviceTagsContainer = document.getElementById('serviceTags');
+      const suggestedTagsContainer = document.getElementById('suggestedTags');
+
+      // Function to add a tag
+      function addTag(text) {
+        if (text && !Array.from(serviceTagsContainer.children).some(tag => tag.dataset.value === text)) {
+          const tagDiv = document.createElement('div');
+          tagDiv.className = 'tag';
+          tagDiv.dataset.value = text; // Store the original value
+          tagDiv.innerHTML = `${text} <span class="close-icon">✕</span>`;
+          serviceTagsContainer.appendChild(tagDiv);
+        }
+      }
+
+      // Handle input for adding tags
+      serviceInput.addEventListener('keypress', (e) => {
+        if (e.key === ',') {
+          e.preventDefault(); // Prevent comma from being typed
+          const tagText = serviceInput.value.trim().replace(/,$/, ''); // Remove trailing comma
+          if (tagText) {
+            addTag(tagText);
+            serviceInput.value = ''; // Clear input
+          }
+        }
+      });
+
+      // Handle clicking on suggested tags
+      suggestedTagsContainer.addEventListener('click', (e) => {
+        if (e.target.classList.contains('badge')) {
+          const tagText = e.target.dataset.value;
+          addTag(tagText);
+        }
+      });
+
+      // Handle removing tags
+      serviceTagsContainer.addEventListener('click', (e) => {
+        if (e.target.classList.contains('close-icon')) {
+          e.target.parentElement.remove(); // Remove the parent tag div
+        }
+      });
+
+      // Function to handle the "Next" button click
+      window.handleNextClick = () => {
+        const services = Array.from(serviceTagsContainer.children).map(tag => tag.dataset.value);
+        const city = document.getElementById('city').value;
+        const googleMapLink = document.getElementById('googleMapLink').value;
+        const minPrice = document.getElementById('minPrice').value;
+        const maxPrice = document.getElementById('maxPrice').value;
+
+        const formData = {
+          services: services,
+          location: {
+            city: city,
+            mapLink: googleMapLink
+          },
+          priceRange: {
+            minimum: minPrice,
+            maximum: maxPrice
+          }
+        };
+
+        // For demonstration, log the form data. In a real app, you would send this to a server or next page.
+        console.log('Form Data:', formData);
+
+        // Simulate navigation to the next page (replace with actual logic)
+        // window.location.href = 'Addprofilepage2.html';
+        alert('Form submitted! Check console for data. (Navigation to Addprofilepage2.html is simulated)');
+      };
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!-- Shared Header Component -->
+<header class="top-header">
+    <div class="header-left">
+        <button id="menu-toggle" class="btn btn-link d-lg-none" aria-label="Toggle sidebar">
+            <i class="bi bi-list" style="font-size: 1.8rem;"></i>
+        </button>
+        <div class="search-bar">
+            <i class="bi bi-search"></i>
+            <input type="text" placeholder="Search">
+        </div>
+    </div>
+    <div class="header-right">
+        <!-- Notification Dropdown -->
+        <div class="header-item notification-icon" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-bell-fill" style="font-size: 1.2rem; color: #6B7280;"></i>
+            <span class="notification-badge">6</span>
+        </div>
+        <ul class="dropdown-menu notification-dropdown">
+            <li><h6 class="dropdown-header">Notifications</h6></li>
+            <li><div class="notification-item">
+                <div class="notification-title">New event created</div>
+                <div class="notification-time">2 minutes ago</div>
+            </div></li>
+            <li><div class="notification-item">
+                <div class="notification-title">Vendor request approved</div>
+                <div class="notification-time">1 hour ago</div>
+            </div></li>
+            <li><div class="notification-item">
+                <div class="notification-title">Payment received</div>
+                <div class="notification-time">3 hours ago</div>
+            </div></li>
+            <li><div class="notification-item">
+                <div class="notification-title">New message from vendor</div>
+                <div class="notification-time">5 hours ago</div>
+            </div></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item text-center" href="#">View all notifications</a></li>
+        </ul>
+        
+        <!-- Language Selector -->
+        <div class="header-item dropdown language-selector">
+            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                <img src="../assets/img/flag.png" alt="UK Flag" class="flag-icon"> English
+            </a>
+            <ul class="dropdown-menu language-dropdown">
+                <li><div class="language-option" data-lang="en">
+                    <img src="../assets/img/flag.png" alt="UK Flag"> English
+                </div></li>
+                <li><div class="language-option" data-lang="es">
+                    <img src="../assets/img/flag.png" alt="Spain Flag"> Español
+                </div></li>
+                <li><div class="language-option" data-lang="fr">
+                    <img src="../assets/img/flag.png" alt="France Flag"> Français
+                </div></li>
+                <li><div class="language-option" data-lang="de">
+                    <img src="../assets/img/flag.png" alt="Germany Flag"> Deutsch
+                </div></li>
+            </ul>
+        </div>
+        
+        <!-- User Menu -->
+        <div class="header-item dropdown user-menu">
+            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                <img src="../assets/img/admin.png" class="avatar" alt="User Avatar">
+                <div class="user-info">
+                    <span class="user-name">Moni Roy</span>
+                    <span class="user-role">Admin</span>
+                </div>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#"><i class="bi bi-person me-2"></i>Profile</a></li>
+                <li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i>Settings</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="#"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+            </ul>
+        </div>
+    </div>
+</header> 
