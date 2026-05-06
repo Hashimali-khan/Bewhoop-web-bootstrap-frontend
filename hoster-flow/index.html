@@ -98,30 +98,7 @@
 			color: #fff;
 		}
 
-		.side-panel {
-			padding: 30px;
-			border-left: 1px solid var(--border);
-			background: linear-gradient(180deg, rgba(255, 255, 255, 0.6), rgba(244, 209, 201, 0.25));
-		}
 
-		.info-card {
-			border: 1px solid var(--border);
-			border-radius: 22px;
-			background: rgba(255, 255, 255, 0.72);
-			padding: 22px;
-			margin-bottom: 16px;
-		}
-
-		.info-title {
-			font-size: 1rem;
-			font-weight: 700;
-			margin-bottom: 6px;
-		}
-
-		.info-copy {
-			margin: 0;
-			color: var(--muted);
-		}
 
 		.footer-links {
 			display: flex;
@@ -143,14 +120,8 @@
 		}
 
 		@media (max-width: 991.98px) {
-			.copy,
-			.side-panel {
+			.copy {
 				padding: 28px;
-			}
-
-			.side-panel {
-				border-left: 0;
-				border-top: 1px solid var(--border);
 			}
 		}
 
@@ -159,8 +130,7 @@
 				padding: 16px;
 			}
 
-			.copy,
-			.side-panel {
+			.copy {
 				padding: 20px;
 			}
 		}
@@ -169,7 +139,7 @@
 <body>
 	<main class="page-shell">
 		<div class="hero row g-0">
-			<section class="col-lg-7 copy">
+			<section class="copy">
 				<span class="brand">Bewhoop hoster</span>
 				<h1>Create events without the clutter.</h1>
 				<p class="lead-copy mb-0">
@@ -189,21 +159,6 @@
 					<a href="./onboarding-screens/onboarding-final.html">Onboarding tags</a>
 				</div>
 			</section>
-
-			<aside class="col-lg-5 side-panel">
-				<div class="info-card">
-					<div class="info-title">Entry route</div>
-					<p class="info-copy">Use this page as the deployed hoster homepage on Vercel.</p>
-				</div>
-				<div class="info-card">
-					<div class="info-title">Recommended next step</div>
-					<p class="info-copy">Send new hosters to signup, then continue to onboarding and the dashboard.</p>
-				</div>
-				<div class="info-card mb-0">
-					<div class="info-title">Deployment note</div>
-					<p class="info-copy">This site is static, so Vercel can serve it directly with no build command.</p>
-				</div>
-			</aside>
 		</div>
 	</main>
 </body>
