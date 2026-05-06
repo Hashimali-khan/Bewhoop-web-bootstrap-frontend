@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta name="description" content="Bewhoop hoster flow landing page." />
+	<title>Bewhoop Hoster</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+	<style>
+		:root {
+			--bg: #f7f2eb;
+			--surface: rgba(255, 255, 255, 0.82);
+			--text: #191919;
+			--muted: #5a5a5a;
+			--accent: #a62f24;
+			--accent-soft: #f4d1c9;
+			--border: rgba(25, 25, 25, 0.12);
+		}
+
+		html, body {
+			min-height: 100%;
+			margin: 0;
+			font-family: "Segoe UI", sans-serif;
+			background:
+				radial-gradient(circle at top right, rgba(166, 47, 36, 0.2), transparent 30%),
+				radial-gradient(circle at bottom left, rgba(244, 209, 201, 0.72), transparent 34%),
+				linear-gradient(135deg, #fcf8f4 0%, #f6efe7 100%);
+			color: var(--text);
+		}
+
+		.page-shell {
+			min-height: 100vh;
+			padding: 28px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.hero {
+			width: min(1060px, 100%);
+			border: 1px solid var(--border);
+			border-radius: 28px;
+			overflow: hidden;
+			background: var(--surface);
+			backdrop-filter: blur(16px);
+			box-shadow: 0 28px 80px rgba(25, 25, 25, 0.12);
+		}
+
+		.copy {
+			padding: 56px;
+		}
+
+		.brand {
+			display: inline-flex;
+			align-items: center;
+			gap: 10px;
+			font-size: 0.88rem;
+			font-weight: 700;
+			letter-spacing: 0.06em;
+			text-transform: uppercase;
+			color: var(--accent);
+			background: rgba(166, 47, 36, 0.1);
+			border-radius: 999px;
+			padding: 8px 14px;
+		}
+
+		h1 {
+			font-size: clamp(2.5rem, 5vw, 4.5rem);
+			line-height: 0.96;
+			letter-spacing: -0.05em;
+			margin: 18px 0 16px;
+			max-width: 10ch;
+		}
+
+		.lead-copy {
+			color: var(--muted);
+			font-size: 1.05rem;
+			line-height: 1.7;
+			max-width: 58ch;
+		}
+
+		.actions {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 12px;
+			margin-top: 28px;
+		}
+
+		.btn-accent {
+			background: var(--accent);
+			border-color: var(--accent);
+			color: #fff;
+		}
+
+		.btn-accent:hover {
+			background: #8f261d;
+			border-color: #8f261d;
+			color: #fff;
+		}
+
+		.side-panel {
+			padding: 30px;
+			border-left: 1px solid var(--border);
+			background: linear-gradient(180deg, rgba(255, 255, 255, 0.6), rgba(244, 209, 201, 0.25));
+		}
+
+		.info-card {
+			border: 1px solid var(--border);
+			border-radius: 22px;
+			background: rgba(255, 255, 255, 0.72);
+			padding: 22px;
+			margin-bottom: 16px;
+		}
+
+		.info-title {
+			font-size: 1rem;
+			font-weight: 700;
+			margin-bottom: 6px;
+		}
+
+		.info-copy {
+			margin: 0;
+			color: var(--muted);
+		}
+
+		.footer-links {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 12px;
+			margin-top: 28px;
+			font-size: 0.95rem;
+		}
+
+		.footer-links a {
+			color: var(--text);
+			text-decoration: none;
+			border-bottom: 1px solid rgba(25, 25, 25, 0.2);
+		}
+
+		.footer-links a:hover {
+			color: var(--accent);
+			border-bottom-color: var(--accent);
+		}
+
+		@media (max-width: 991.98px) {
+			.copy,
+			.side-panel {
+				padding: 28px;
+			}
+
+			.side-panel {
+				border-left: 0;
+				border-top: 1px solid var(--border);
+			}
+		}
+
+		@media (max-width: 575.98px) {
+			.page-shell {
+				padding: 16px;
+			}
+
+			.copy,
+			.side-panel {
+				padding: 20px;
+			}
+		}
+	</style>
+</head>
+<body>
+	<main class="page-shell">
+		<div class="hero row g-0">
+			<section class="col-lg-7 copy">
+				<span class="brand">Bewhoop hoster</span>
+				<h1>Create events without the clutter.</h1>
+				<p class="lead-copy mb-0">
+					This entry point is the hoster experience for Bewhoop. From here you can start onboarding,
+					move into the dashboard, and continue through the multi-step event creation flow.
+				</p>
+
+				<div class="actions">
+					<a href="./onboarding-screens/signup.html" class="btn btn-accent px-4">Create an event</a>
+					<a href="./pages/dashboard.html" class="btn btn-outline-dark px-4">Open dashboard</a>
+					<a href="../vendor-flow/index.html" class="btn px-4" style="background: var(--accent-soft); border-color: var(--accent-soft); color: #34100c;">Switch to vendor flow</a>
+				</div>
+
+				<div class="footer-links">
+					<a href="./pages/vendor-list.html">Browse vendors</a>
+					<a href="./pages/create-event-step1.html">Start event wizard</a>
+					<a href="./onboarding-screens/onboarding-final.html">Onboarding tags</a>
+				</div>
+			</section>
+
+			<aside class="col-lg-5 side-panel">
+				<div class="info-card">
+					<div class="info-title">Entry route</div>
+					<p class="info-copy">Use this page as the deployed hoster homepage on Vercel.</p>
+				</div>
+				<div class="info-card">
+					<div class="info-title">Recommended next step</div>
+					<p class="info-copy">Send new hosters to signup, then continue to onboarding and the dashboard.</p>
+				</div>
+				<div class="info-card mb-0">
+					<div class="info-title">Deployment note</div>
+					<p class="info-copy">This site is static, so Vercel can serve it directly with no build command.</p>
+				</div>
+			</aside>
+		</div>
+	</main>
+</body>
+</html>

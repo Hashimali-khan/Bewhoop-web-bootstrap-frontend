@@ -10,6 +10,32 @@
  */
 
 // ========================================
+// MODULE LOADER
+// ========================================
+const BEEWHOOP_CORE_SCRIPT_URL = document.currentScript ? new URL(document.currentScript.src) : new URL(window.location.href);
+const BEEWHOOP_MODULE_PATHS = [
+    './modules/shell.js',
+    './modules/sidebar.js',
+    './modules/header.js',
+    './modules/search.js',
+    './modules/validation.js',
+    './modules/pagination.js',
+    './modules/filters.js'
+];
+
+function loadBewhoopModule(src) {
+    return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = new URL(src, BEEWHOOP_CORE_SCRIPT_URL).href;
+        script.onload = () => resolve(script);
+        script.onerror = () => reject(new Error(`Failed to load ${script.src}`));
+        document.head.appendChild(script);
+    });
+}
+
+const BEEWHOOP_MODULES_READY = Promise.all(BEEWHOOP_MODULE_PATHS.map(loadBewhoopModule));
+
+// ========================================
 // CORE APPLICATION CLASS
 // ========================================
 class BewhoopApp {
@@ -43,46 +69,28 @@ class BewhoopApp {
     // SIDEBAR FUNCTIONALITY
     // ========================================
     initializeSidebar() {
-        const menuButton = document.getElementById('menu-toggle');
-        const sidebar = document.querySelector('.sidebar');
-        const overlay = document.querySelector('.sidebar-overlay');
-
-        if (menuButton && sidebar && overlay) {
-            menuButton.addEventListener('click', () => {
-                sidebar.classList.toggle('is-open');
-                overlay.style.display = sidebar.classList.contains('is-open') ? 'block' : 'none';
-            });
-
-            overlay.addEventListener('click', () => {
-                sidebar.classList.remove('is-open');
-                overlay.style.display = 'none';
-            });
-        }
+        window.BewhoopModules?.sidebar?.initialize(this);
     }
 
     // Set active navigation based on current page
     setActiveNavigation() {
-        const navLinks = document.querySelectorAll('.nav-link[data-page]');
-        navLinks.forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('data-page') === this.currentPage) {
-                link.classList.add('active');
-            }
-        });
+        window.BewhoopModules?.sidebar?.setActiveNavigation(this);
     }
 
     // ========================================
     // HEADER FUNCTIONALITY
     // ========================================
     initializeHeader() {
-        this.initializeNotifications();
-        this.initializeLanguageSelector();
-        this.initializeUserMenu();
+        window.BewhoopModules?.header?.initialize(this);
     }
 
     initializeNotifications() {
         const notificationItems = document.querySelectorAll('.notification-item');
         const notificationBadge = document.querySelector('.notification-badge');
+        if (!notificationItems.length || !notificationBadge) {
+            return;
+        }
+
         let unreadCount = 6;
 
         notificationItems.forEach(item => {
@@ -100,7 +108,7 @@ class BewhoopApp {
         });
 
         // Mark all as read
-        const viewAllLink = document.querySelector('.dropdown-item[href="#"]');
+        const viewAllLink = document.querySelector('.notification-dropdown .dropdown-item[href="#"]');
         if (viewAllLink) {
             viewAllLink.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -117,12 +125,20 @@ class BewhoopApp {
     initializeLanguageSelector() {
         const languageOptions = document.querySelectorAll('.language-option');
         const languageToggle = document.querySelector('.language-selector .dropdown-toggle');
+
+        if (!languageOptions.length || !languageToggle) {
+            return;
+        }
         
         languageOptions.forEach(option => {
             option.addEventListener('click', () => {
                 const lang = option.getAttribute('data-lang');
                 const langText = option.textContent.trim();
-                const flagImg = option.querySelector('img').src;
+                const flagImg = option.querySelector('img')?.src;
+
+                if (!flagImg) {
+                    return;
+                }
                 
                 languageToggle.innerHTML = `<img src="${flagImg}" alt="Flag" class="flag-icon"> ${langText}`;
                 localStorage.setItem('selectedLanguage', lang);
@@ -143,20 +159,24 @@ class BewhoopApp {
 
     initializeUserMenu() {
         const userMenuItems = document.querySelectorAll('.user-menu .dropdown-item');
+        if (!userMenuItems.length) {
+            return;
+        }
+
         userMenuItems.forEach(item => {
             item.addEventListener('click', (e) => {
+                e.preventDefault();
                 const action = item.textContent.trim();
                 console.log('User menu action:', action);
                 
                 switch(action) {
                     case 'Profile':
-                        // Navigate to profile page
+                        this.showNotification('Profile navigation is not wired yet.', 'info');
                         break;
                     case 'Settings':
-                        // Navigate to settings page
+                        this.showNotification('Settings navigation is not wired yet.', 'info');
                         break;
                     case 'Logout':
-                        // Handle logout
                         this.handleLogout();
                         break;
                 }
@@ -165,39 +185,23 @@ class BewhoopApp {
     }
 
     handleLogout() {
-        // Add logout logic here
-        console.log('User logout initiated');
-        // Example: redirect to login page
-        // window.location.href = '/login.html';
+        localStorage.removeItem('selectedLanguage');
+        window.location.href = '/index.html';
     }
 
     // ========================================
     // SEARCH FUNCTIONALITY
     // ========================================
     initializeSearch() {
-        const searchInputs = document.querySelectorAll('input[data-search-type], input[placeholder*="Search"]');
-        
-        searchInputs.forEach(input => {
-            input.addEventListener('input', (e) => {
-                const searchTerm = e.target.value.toLowerCase();
-                const searchType = e.target.getAttribute('data-search-type') || 'general';
-                
-                switch(searchType) {
-                    case 'events':
-                        this.searchEvents(searchTerm);
-                        break;
-                    case 'vendors':
-                        this.searchVendors(searchTerm);
-                        break;
-                    default:
-                        this.searchGeneral(searchTerm);
-                }
-            });
-        });
+        window.BewhoopModules?.search?.initialize(this);
     }
 
     searchEvents(searchTerm) {
         const eventRows = document.querySelectorAll('tbody tr');
+        if (!eventRows.length) {
+            return;
+        }
+
         eventRows.forEach(row => {
             const eventName = row.querySelector('td:first-child')?.textContent.toLowerCase() || '';
             const eventLocation = row.querySelector('td:nth-child(2)')?.textContent.toLowerCase() || '';
@@ -212,50 +216,46 @@ class BewhoopApp {
 
     searchVendors(searchTerm) {
         const vendorCards = document.querySelectorAll('.vendor-card');
+        if (!vendorCards.length) {
+            return;
+        }
+
         vendorCards.forEach(card => {
             const vendorName = card.querySelector('.vendor-name')?.textContent.toLowerCase() || '';
             const vendorRole = card.querySelector('.vendor-role')?.textContent.toLowerCase() || '';
             const vendorLocation = card.querySelector('.vendor-location')?.textContent.toLowerCase() || '';
+            const vendorColumn = card.closest('.col-lg-4') || card.parentElement;
             
             if (vendorName.includes(searchTerm) || vendorRole.includes(searchTerm) || vendorLocation.includes(searchTerm)) {
-                card.closest('.col-lg-4').style.display = '';
+                if (vendorColumn) {
+                    vendorColumn.style.display = '';
+                }
             } else {
-                card.closest('.col-lg-4').style.display = 'none';
+                if (vendorColumn) {
+                    vendorColumn.style.display = 'none';
+                }
             }
         });
     }
 
     searchGeneral(searchTerm) {
-        // General search functionality
-        console.log('General search for:', searchTerm);
+        const hasEventRows = document.querySelectorAll('tbody tr').length > 0;
+        const hasVendorCards = document.querySelectorAll('.vendor-card').length > 0;
+
+        if (hasEventRows) {
+            this.searchEvents(searchTerm);
+        }
+
+        if (hasVendorCards) {
+            this.searchVendors(searchTerm);
+        }
     }
 
     // ========================================
     // FORM VALIDATION
     // ========================================
     initializeFormValidation() {
-        const forms = document.querySelectorAll('form');
-        
-        forms.forEach(form => {
-            form.addEventListener('submit', (e) => {
-                if (!this.validateForm(form)) {
-                    e.preventDefault();
-                    return false;
-                }
-            });
-        });
-        
-        // Real-time validation for inputs
-        const inputs = document.querySelectorAll('input, select, textarea');
-        inputs.forEach(input => {
-            input.addEventListener('blur', () => {
-                this.validateField(input);
-            });
-            
-            input.addEventListener('input', () => {
-                this.clearFieldError(input);
-            });
-        });
+        window.BewhoopModules?.validation?.initialize(this);
     }
 
     validateForm(form) {
@@ -308,20 +308,33 @@ class BewhoopApp {
     }
 
     showFieldError(field, message) {
+        const parent = field.parentNode;
+        if (!parent) {
+            return;
+        }
+
+        const existingError = parent.querySelector('.invalid-feedback');
+        if (existingError) {
+            existingError.remove();
+        }
+
         const errorDiv = document.createElement('div');
         errorDiv.className = 'invalid-feedback d-block';
         errorDiv.textContent = message;
         
         field.classList.add('is-invalid');
-        field.parentNode.appendChild(errorDiv);
+        parent.appendChild(errorDiv);
     }
 
     clearFieldError(field) {
         field.classList.remove('is-invalid');
-        const errorDiv = field.parentNode.querySelector('.invalid-feedback');
-        if (errorDiv) {
-            errorDiv.remove();
+        const parent = field.parentNode;
+        if (!parent) {
+            return;
         }
+
+        const errorDivs = parent.querySelectorAll('.invalid-feedback');
+        errorDivs.forEach(errorDiv => errorDiv.remove());
     }
 
     isValidEmail(email) {
@@ -338,73 +351,42 @@ class BewhoopApp {
     // PAGINATION FUNCTIONALITY
     // ========================================
     initializePagination() {
-        const paginationButtons = document.querySelectorAll('.btn[aria-label*="Page"]');
-        
-        paginationButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const action = button.textContent.includes('Prev') ? 'prev' : 'next';
-                this.handlePagination(action);
-            });
-        });
+        window.BewhoopModules?.pagination?.initialize(this);
     }
 
     handlePagination(action) {
-        console.log('Pagination action:', action);
-        // This would typically make an API call to get next/prev page
-        // For demo purposes, we'll just log the action
+        this.showNotification(`Pagination is a demo placeholder for the ${action} action.`, 'info');
     }
 
     // ========================================
     // DASHBOARD FILTERS
     // ========================================
     initializeDashboardFilters() {
-        // Festival dropdown
-        const festivalDropdown = document.querySelector('#festivalDropdown');
-        if (festivalDropdown) {
-            const festivalOptions = festivalDropdown.nextElementSibling.querySelectorAll('.dropdown-item');
-            festivalOptions.forEach(option => {
-                option.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const selectedFestival = option.textContent;
-                    festivalDropdown.textContent = selectedFestival;
-                    this.filterDashboardData(selectedFestival);
-                });
-            });
-        }
-        
-        // Date dropdown
-        const dateDropdown = document.querySelector('#dateDropdown');
-        if (dateDropdown) {
-            const dateOptions = dateDropdown.nextElementSibling.querySelectorAll('.dropdown-item');
-            dateOptions.forEach(option => {
-                option.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const selectedDate = option.textContent;
-                    dateDropdown.textContent = selectedDate;
-                    this.filterDashboardData(null, selectedDate);
-                });
-            });
-        }
-        
-        // Reset filter button
-        const resetFilterBtn = document.querySelector('.btn-outline-secondary[aria-label="Reset Filter"]');
-        if (resetFilterBtn) {
-            resetFilterBtn.addEventListener('click', () => {
-                this.resetDashboardFilters();
-            });
-        }
+        window.BewhoopModules?.filters?.initialize(this);
     }
 
     filterDashboardData(festival = null, date = null) {
-        console.log('Filtering dashboard data:', { festival, date });
-        
-        // Here you would typically make an API call to filter data
-        // For demo purposes, we'll just log the filter
-        if (festival) {
-            console.log('Filtering by festival:', festival);
+        const eventRows = document.querySelectorAll('tbody tr');
+        if (!eventRows.length) {
+            return;
         }
-        if (date) {
-            console.log('Filtering by date:', date);
+
+        let visibleCount = 0;
+        eventRows.forEach(row => {
+            const rowText = row.textContent.toLowerCase();
+            const matchesFestival = festival ? rowText.includes(festival.toLowerCase()) : true;
+            const matchesDate = date ? rowText.includes(date.toLowerCase()) : true;
+            const shouldShow = matchesFestival && matchesDate;
+
+            row.style.display = shouldShow ? '' : 'none';
+            if (shouldShow) {
+                visibleCount++;
+            }
+        });
+
+        if (!this.dashboardFilterNoticeShown) {
+            this.showNotification('Dashboard filters now apply local row filtering. Connect them to API data next.', 'info');
+            this.dashboardFilterNoticeShown = true;
         }
     }
 
@@ -420,8 +402,6 @@ class BewhoopApp {
         eventRows.forEach(row => {
             row.style.display = '';
         });
-        
-        console.log('Dashboard filters reset');
     }
 
     // ========================================
@@ -451,7 +431,8 @@ class BewhoopApp {
 // ========================================
 // INITIALIZATION
 // ========================================
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize the main application
+document.addEventListener('DOMContentLoaded', async function() {
+    await BEEWHOOP_MODULES_READY;
+    await window.BewhoopModules?.shell?.ready;
     window.bewhoopApp = new BewhoopApp();
-}); 
+});

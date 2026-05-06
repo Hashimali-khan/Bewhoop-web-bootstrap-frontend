@@ -1,0 +1,63 @@
+name: Static Site Validation
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  validate-links-and-assets:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate local links and assets
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          import sys
+
+          root = Path('.').resolve()
+          html_files = (
+              list(root.glob('hoster-flow/pages/**/*.html'))
+              + list(root.glob('hoster-flow/onboarding-screens/**/*.html'))
+              + [root / 'hoster-flow/index.html']
+              + list(root.glob('vendor-flow/*.html'))
+              + [root / 'index.html']
+          )
+          pattern = re.compile(r'(?i)(?:src|href)=["\']([^"\']+)["\']')
+          ignored_schemes = ('http://', 'https://', 'mailto:', 'tel:', 'javascript:', '#')
+          failures = []
+
+          for file_path in html_files:
+              if not file_path.exists():
+                  continue
+              content = file_path.read_text(encoding='utf-8', errors='ignore')
+              for match in pattern.findall(content):
+                  target = match.strip()
+                  if not target or target.startswith(ignored_schemes):
+                      continue
+                  if target.startswith('//') or '${' in target:
+                      continue
+
+                  normalized = target.split('#', 1)[0].split('?', 1)[0]
+                  if not normalized:
+                      continue
+
+                  candidate = (file_path.parent / normalized).resolve() if not normalized.startswith('/') else (root / normalized.lstrip('/')).resolve()
+
+                  if not candidate.exists():
+                      failures.append(f'{file_path.relative_to(root)} -> {target}')
+
+          if failures:
+              print('Broken local references found:')
+              for failure in failures:
+                  print(f'- {failure}')
+              sys.exit(1)
+
+          print('No broken local references found.')
+          PY
