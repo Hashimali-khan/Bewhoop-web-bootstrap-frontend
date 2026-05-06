@@ -3,239 +3,523 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Bewhoop is a dual-sided event platform for hosters and vendors." />
-  <title>Bewhoop</title>
+  <meta name="description" content="Bewhoop - Connect vendors and event hosters. Choose your role to get started." />
+  <title>Bewhoop - Event Platform</title>
+  <!-- Bootstrap 5.3.2 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
+  
   <style>
     :root {
       --bg: #f4efe8;
-      --card: rgba(255, 255, 255, 0.82);
-      --text: #171717;
-      --muted: #5f5f5f;
+      --card-bg: rgba(255, 255, 255, 0.82);
+      --text-primary: #171717;
+      --text-muted: #5f5f5f;
       --accent: #a62f24;
       --accent-soft: #f4cfc8;
-      --border: rgba(23, 23, 23, 0.12);
+      --accent-dark: #8b0000;
+      --border-color: rgba(23, 23, 23, 0.12);
+      --shadow-light: 0 4px 12px rgba(23, 23, 23, 0.08);
+      --shadow-medium: 0 12px 32px rgba(23, 23, 23, 0.12);
+      --transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ===== GLOBAL ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
     html, body {
-      min-height: 100%;
-      margin: 0;
+      height: 100%;
+      min-height: 100vh;
       font-family: "Segoe UI", sans-serif;
-      background:
-        radial-gradient(circle at top left, rgba(166, 47, 36, 0.18), transparent 32%),
-        radial-gradient(circle at bottom right, rgba(244, 207, 200, 0.6), transparent 34%),
-        linear-gradient(135deg, #fbf7f2 0%, #f4efe8 100%);
-      color: var(--text);
+      background: 
+        radial-gradient(circle at top left, rgba(166, 47, 36, 0.12), transparent 35%),
+        radial-gradient(circle at bottom right, rgba(244, 207, 200, 0.4), transparent 40%),
+        linear-gradient(135deg, #fcf7f2 0%, var(--bg) 100%);
+      color: var(--text-primary);
     }
 
-    .page-shell {
+    /* ===== LAYOUT ===== */
+    .page-container {
       min-height: 100vh;
-      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 32px 20px;
+    }
+
+    .content-wrapper {
+      width: 100%;
+      max-width: 1200px;
+    }
+
+    /* ===== HEADER ===== */
+    .header-section {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+
+    .logo-container {
       display: flex;
       align-items: center;
       justify-content: center;
+      gap: 12px;
+      margin-bottom: 24px;
     }
 
-    .landing-grid {
-      width: min(1120px, 100%);
-    }
-
-    .hero-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 28px;
-      box-shadow: 0 24px 80px rgba(23, 23, 23, 0.12);
-      backdrop-filter: blur(16px);
-      overflow: hidden;
-    }
-
-    .hero-copy {
-      padding: 56px;
-    }
-
-    .eyebrow {
-      display: inline-flex;
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 8px 14px;
-      border-radius: 999px;
-      background: rgba(166, 47, 36, 0.1);
-      color: var(--accent);
-      font-size: 0.86rem;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+      border-radius: 10px;
+      color: white;
+      font-size: 28px;
+    }
+
+    .logo-text {
+      font-size: 28px;
       font-weight: 700;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
+      color: var(--text-primary);
+      letter-spacing: -0.5px;
     }
 
-    .hero-title {
-      font-size: clamp(2.5rem, 5vw, 4.9rem);
-      line-height: 0.94;
-      letter-spacing: -0.05em;
-      margin: 18px 0 18px;
-      max-width: 11ch;
+    .header-title {
+      font-size: clamp(2rem, 5vw, 2.8rem);
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+      line-height: 1.2;
     }
 
-    .hero-text {
-      max-width: 58ch;
-      color: var(--muted);
-      font-size: 1.05rem;
-      line-height: 1.7;
+    .header-subtitle {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: var(--text-muted);
+      line-height: 1.6;
+      max-width: 600px;
+      margin: 0 auto;
     }
 
-    .entry-card {
-      height: 100%;
-      padding: 28px;
-      border-left: 1px solid var(--border);
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.64), rgba(244, 207, 200, 0.26));
+    /* ===== CARDS CONTAINER ===== */
+    .flow-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 32px;
+      justify-items: center;
     }
 
+    @media (max-width: 768px) {
+      .flow-cards {
+        gap: 24px;
+      }
+    }
+
+    /* ===== FLOW CARD ===== */
     .flow-card {
-      border: 1px solid var(--border);
-      border-radius: 22px;
-      padding: 24px;
-      background: rgba(255, 255, 255, 0.7);
-      transition: transform 180ms ease, box-shadow 180ms ease;
-      height: 100%;
+      width: 100%;
+      max-width: 380px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      box-shadow: var(--shadow-light);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: var(--transition);
+      cursor: pointer;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
     }
 
     .flow-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 20px 40px rgba(23, 23, 23, 0.1);
-    }
-
-    .flow-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      font-weight: 700;
-      color: var(--muted);
-    }
-
-    .flow-title {
-      margin: 14px 0 8px;
-      font-size: 1.45rem;
-      font-weight: 700;
-    }
-
-    .flow-copy {
-      color: var(--muted);
-      margin-bottom: 18px;
-      min-height: 4.5rem;
-    }
-
-    .btn-accent {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #fff;
-    }
-
-    .btn-accent:hover {
-      background: #8f261d;
-      border-color: #8f261d;
-      color: #fff;
-    }
-
-    .btn-soft {
-      background: var(--accent-soft);
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-medium);
       border-color: var(--accent-soft);
-      color: #34100c;
     }
 
-    .meta-row {
-      margin-top: 28px;
+    /* Card Header with Icon */
+    .card-header-section {
+      padding: 40px 32px 32px;
+      text-align: center;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.2) 100%);
+    }
+
+    .card-icon {
+      width: 64px;
+      height: 64px;
       display: flex;
-      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--accent-soft), rgba(244, 207, 200, 0.3));
+      border-radius: 16px;
+      margin: 0 auto 20px;
+      font-size: 36px;
+      color: var(--accent);
+      transition: var(--transition);
+    }
+
+    .flow-card:hover .card-icon {
+      transform: scale(1.1);
+      background: linear-gradient(135deg, var(--accent), var(--accent-soft));
+      color: white;
+    }
+
+    .card-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .card-subtitle {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      opacity: 0.8;
+    }
+
+    /* Card Body */
+    .card-body-section {
+      padding: 24px 32px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      flex-grow: 1;
+    }
+
+    .card-description {
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--text-muted);
+    }
+
+    .card-features {
+      display: flex;
+      flex-direction: column;
       gap: 12px;
     }
 
-    .meta-pill {
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 10px 14px;
-      font-size: 0.92rem;
-      color: var(--muted);
-      background: rgba(255, 255, 255, 0.55);
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--text-primary);
+      line-height: 1.5;
     }
 
-    @media (max-width: 991.98px) {
-      .hero-copy,
-      .entry-card {
-        padding: 28px;
+    .feature-icon {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+      margin-top: 2px;
+      font-size: 12px;
+    }
+
+    /* ===== BUTTONS ===== */
+    .card-button {
+      width: 100%;
+      padding: 14px 24px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+      text-align: center;
+    }
+
+    .btn-vendor {
+      background-color: var(--accent-soft);
+      color: var(--text-primary);
+    }
+
+    .btn-vendor:hover {
+      background-color: var(--accent);
+      color: white;
+      box-shadow: 0 8px 24px rgba(166, 47, 36, 0.3);
+    }
+
+    .btn-hoster {
+      background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+      color: white;
+    }
+
+    .btn-hoster:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(166, 47, 36, 0.4);
+    }
+
+    .btn-icon {
+      font-size: 14px;
+    }
+
+    /* ===== FOOTER ===== */
+    .footer-section {
+      text-align: center;
+      margin-top: 64px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border-color);
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .footer-links a:hover {
+      color: var(--accent);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .page-container {
+        padding: 24px 16px;
       }
 
-      .entry-card {
-        border-left: 0;
-        border-top: 1px solid var(--border);
+      .header-section {
+        margin-bottom: 48px;
+      }
+
+      .logo-container {
+        margin-bottom: 20px;
+      }
+
+      .flow-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .flow-card {
+        max-width: 100%;
+      }
+
+      .card-header-section {
+        padding: 32px 24px 24px;
+      }
+
+      .card-body-section {
+        padding: 20px 24px 24px;
+      }
+
+      .card-icon {
+        width: 56px;
+        height: 56px;
+        font-size: 32px;
+      }
+
+      .card-title {
+        font-size: 20px;
+      }
+
+      .footer-section {
+        margin-top: 48px;
+        padding-top: 24px;
+      }
+
+      .footer-links {
+        gap: 16px;
       }
     }
 
-    @media (max-width: 575.98px) {
-      .page-shell {
-        padding: 16px;
+    /* ===== ANIMATIONS ===== */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
       }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
-      .hero-copy,
-      .entry-card {
-        padding: 20px;
-      }
+    .header-section {
+      animation: fadeInUp 0.6s ease 0.1s both;
+    }
+
+    .flow-cards {
+      animation: fadeInUp 0.6s ease 0.3s both;
+    }
+
+    .footer-section {
+      animation: fadeInUp 0.6s ease 0.5s both;
     }
   </style>
 </head>
+
 <body>
-  <main class="page-shell">
-    <div class="landing-grid">
-      <div class="hero-card row g-0">
-        <section class="col-lg-7 hero-copy">
-          <span class="eyebrow">Bewhoop</span>
-          <h1 class="hero-title">Event planning for hosters and vendors.</h1>
-          <p class="hero-text mb-0">
-            Choose the experience you want to explore. The hoster flow covers event creation,
-            onboarding, and analytics. The vendor flow covers registration, profile setup, and dashboard management.
-          </p>
-
-          <div class="meta-row">
-            <span class="meta-pill">Static HTML</span>
-            <span class="meta-pill">Bootstrap 5</span>
-            <span class="meta-pill">No build step</span>
+  <div class="page-container">
+    <div class="content-wrapper">
+      <!-- HEADER -->
+      <section class="header-section">
+        <div class="logo-container">
+          <div class="logo-icon">
+            <i class="bi bi-calendar-check"></i>
           </div>
-        </section>
+          <div class="logo-text">Bewhoop</div>
+        </div>
+        <h1 class="header-title">Connect & Collaborate</h1>
+        <p class="header-subtitle">
+          Choose your role to get started. Whether you're organizing events or offering services, Bewhoop brings vendors and hosters together.
+        </p>
+      </section>
 
-        <aside class="col-lg-5 entry-card">
-          <div class="row g-3 h-100">
-            <div class="col-12">
-              <div class="flow-card">
-                <div class="flow-tag">Hoster flow</div>
-                <h2 class="flow-title">Create and manage events</h2>
-                <p class="flow-copy">
-                  Start here to build your event, browse vendors, and move through the hoster onboarding screens.
-                </p>
-                <div class="d-flex flex-wrap gap-2">
-                  <a href="./hoster-flow/index.html" class="btn btn-accent px-4">Open hoster flow</a>
-                  <a href="./hoster-flow/onboarding-screens/signup.html" class="btn btn-outline-dark px-4">Get started</a>
-                </div>
+      <!-- FLOW CARDS -->
+      <section class="flow-cards">
+        <!-- VENDOR CARD -->
+        <div class="flow-card" id="vendor-card">
+          <div class="card-header-section">
+            <div class="card-icon">
+              <i class="bi bi-briefcase"></i>
+            </div>
+            <p class="card-subtitle">For Service Providers</p>
+            <h2 class="card-title">I'm a Vendor</h2>
+          </div>
+          <div class="card-body-section">
+            <p class="card-description">
+              Showcase your services to event organizers and grow your business. Manage bookings and reach more clients through our marketplace.
+            </p>
+            <div class="card-features">
+              <div class="feature-item">
+                <div class="feature-icon">✓</div>
+                <span>Reach more clients</span>
+              </div>
+              <div class="feature-item">
+                <div class="feature-icon">✓</div>
+                <span>Manage bookings easily</span>
+              </div>
+              <div class="feature-item">
+                <div class="feature-icon">✓</div>
+                <span>Showcase your portfolio</span>
               </div>
             </div>
+            <button class="card-button btn-vendor" onclick="navigateToVendor()">
+              Get Started
+              <i class="bi bi-arrow-right btn-icon"></i>
+            </button>
+          </div>
+        </div>
 
-            <div class="col-12">
-              <div class="flow-card">
-                <div class="flow-tag">Vendor flow</div>
-                <h2 class="flow-title">Register and build your profile</h2>
-                <p class="flow-copy">
-                  Use the vendor flow to sign up, complete profile steps, and access the vendor dashboard.
-                </p>
-                <div class="d-flex flex-wrap gap-2">
-                  <a href="./vendor-flow/index.html" class="btn btn-soft px-4">Open vendor flow</a>
-                  <a href="./vendor-flow/signup.html" class="btn btn-outline-dark px-4">Sign up</a>
-                </div>
+        <!-- HOSTER CARD -->
+        <div class="flow-card" id="hoster-card">
+          <div class="card-header-section">
+            <div class="card-icon">
+              <i class="bi bi-calendar-event"></i>
+            </div>
+            <p class="card-subtitle">For Event Organizers</p>
+            <h2 class="card-title">I'm an Event Hoster</h2>
+          </div>
+          <div class="card-body-section">
+            <p class="card-description">
+              Plan amazing events and find trusted vendors. Manage vendors, create events, and bring your vision to life with our comprehensive platform.
+            </p>
+            <div class="card-features">
+              <div class="feature-item">
+                <div class="feature-icon">✓</div>
+                <span>Find trusted vendors</span>
+              </div>
+              <div class="feature-item">
+                <div class="feature-icon">✓</div>
+                <span>Plan perfect events</span>
+              </div>
+              <div class="feature-item">
+                <div class="feature-icon">✓</div>
+                <span>Grow your portfolio</span>
               </div>
             </div>
+            <button class="card-button btn-hoster" onclick="navigateToHoster()">
+              Get Started
+              <i class="bi bi-arrow-right btn-icon"></i>
+            </button>
           </div>
-        </aside>
-      </div>
+        </div>
+      </section>
+
+      <!-- FOOTER -->
+      <section class="footer-section">
+        <div class="footer-links">
+          <a href="#about" title="About Bewhoop">About</a>
+          <a href="#privacy" title="Privacy Policy">Privacy Policy</a>
+          <a href="#terms" title="Terms of Service">Terms</a>
+          <a href="#contact" title="Contact Us">Contact</a>
+        </div>
+        <p>&copy; 2024 Bewhoop. All rights reserved.</p>
+      </section>
     </div>
-  </main>
+  </div>
+
+  <!-- SCRIPT -->
+  <script>
+    // Navigation functions
+    function navigateToVendor() {
+      // Track selection (optional)
+      logUserSelection('vendor');
+      // Navigate to vendor flow
+      window.location.href = 'vendor-flow/index.html';
+    }
+
+    function navigateToHoster() {
+      // Track selection (optional)
+      logUserSelection('hoster');
+      // Navigate to hoster flow
+      window.location.href = 'hoster-flow/index.html';
+    }
+
+    // Optional: Track user selection in localStorage
+    function logUserSelection(flowType) {
+      try {
+        localStorage.setItem('bewhoop_selected_flow', flowType);
+        localStorage.setItem('bewhoop_selection_timestamp', new Date().toISOString());
+      } catch (e) {
+        console.log('Unable to store selection', e);
+      }
+    }
+
+    // Optional: Add keyboard navigation (accessibility)
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Enter') {
+        const focusedElement = document.activeElement;
+        if (focusedElement && focusedElement.onclick) {
+          focusedElement.click();
+        }
+      }
+    });
+
+    // Smooth page load
+    window.addEventListener('load', function() {
+      document.body.style.opacity = '1';
+    });
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
